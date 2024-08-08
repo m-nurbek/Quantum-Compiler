@@ -3,7 +3,7 @@ package com.nurbek;
 public interface Lexer {
 
     // get next token
-    Token nextToken();
+    Token nextToken() throws LexerException;
 
     // proceed to next character
     void nextChar();
@@ -12,7 +12,7 @@ public interface Lexer {
     char peekChar();
 
     // log the error message
-    void abort();
+    void abort(String message) throws LexerException;
 
     // skip the whitespace characters
     void skipWhitespace();
