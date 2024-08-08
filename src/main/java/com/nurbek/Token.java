@@ -20,7 +20,7 @@ public interface Token {
         // comparison
         EQUALS, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, AND, OR, NOTEQUAL,
 
-        NEWLINE, EOF, IDENT,
+        NEWLINE, EOF, IDENTIFIER,
 
     }
 

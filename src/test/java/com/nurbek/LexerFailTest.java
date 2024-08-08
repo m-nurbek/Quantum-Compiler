@@ -10,7 +10,6 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class LexerFailTest {
     private String source;
-    private Lexer lexer;
 
     public LexerFailTest(String source) {
         this.source = source;

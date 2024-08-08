@@ -1,5 +1,7 @@
 package com.nurbek;
 
+import java.util.Arrays;
+
 public class LexerImpl implements Lexer {
     private final String source;
     private int currPos;
@@ -20,52 +22,110 @@ public class LexerImpl implements Lexer {
         skipWhitespace();
 
         Token token = null;
+
         if (currChar == '\n') {
-            token =  new TokenImpl("\n", Token.TokenType.NEWLINE);
+            token = new TokenImpl("\n", Token.TokenType.NEWLINE);
 
         } else if (currChar == '\0') {
             token = new TokenImpl("\0", Token.TokenType.EOF);
 
         } else if (currChar == '+') {
-            token = new TokenImpl("+", Token.TokenType.PLUS);
+
+            if (isOperatorEndingValid()) {
+                token = new TokenImpl("+", Token.TokenType.PLUS);
+            } else {
+                abort("Invalid operator '+" + peekChar() + "'");
+            }
 
         } else if (currChar == '-') {
-            token = new TokenImpl("-", Token.TokenType.MINUS);
+
+            if (isOperatorEndingValid()) {
+                token = new TokenImpl("-", Token.TokenType.MINUS);
+            } else {
+                abort("Invalid operator '-" + peekChar() + "'");
+            }
 
         } else if (currChar == '/') {
-            token = new TokenImpl("/", Token.TokenType.SLASH);
+
+            if (isOperatorEndingValid()) {
+                token = new TokenImpl("/", Token.TokenType.SLASH);
+            } else {
+                abort("Invalid operator '/" + peekChar() + "'");
+            }
 
         } else if (currChar == '*') {
-            token = new TokenImpl("*", Token.TokenType.ASTERISK);
+
+            if (isOperatorEndingValid()) {
+                token = new TokenImpl("*", Token.TokenType.ASTERISK);
+            } else {
+                abort("Invalid operator '*/" + peekChar() + "'");
+            }
 
         } else if (currChar == '=') {
+
             if (peekChar() == '=') {
                 token = new TokenImpl("==", Token.TokenType.EQUALS);
                 nextChar();
-            } else {
+
+                if (!(isOperatorEndingValid())) {
+                    abort("Invalid operator '==" + peekChar() + "'");
+                }
+            } else if (isOperatorEndingValid()) {
                 token = new TokenImpl("=", Token.TokenType.EQUAL);
+            } else {
+                abort("Invalid operator '=" + peekChar() + "'");
             }
 
         } else if (currChar == '>') {
+
             if (peekChar() == '=') {
                 token = new TokenImpl(">=", Token.TokenType.GREATER_EQUAL);
                 nextChar();
-            } else {
+
+                if (!(isOperatorEndingValid())) {
+                    abort("Invalid operator '>=" + peekChar() + "'");
+                }
+            } else if (isOperatorEndingValid()) {
                 token = new TokenImpl(">", Token.TokenType.GREATER);
+            } else {
+                abort("Invalid operator '>" + peekChar() + "'");
             }
 
         } else if (currChar == '<') {
+
             if (peekChar() == '=') {
                 token = new TokenImpl("<=", Token.TokenType.LESS_EQUAL);
                 nextChar();
+
+                if (!(isOperatorEndingValid())) {
+                    abort("Invalid operator '<=" + peekChar() + "'");
+                }
+            } else if (isOperatorEndingValid()) {
+                token = new TokenImpl("<", Token.TokenType.LESS);
             } else {
-                token =  new TokenImpl("<", Token.TokenType.LESS);
+                abort("Invalid operator '<" + peekChar() + "'");
             }
 
-        } else if (Character.isDigit(currChar)) {
+        } else if (currChar == '!') {
+
+            if (peekChar() == '=') {
+                token = new TokenImpl("!=", Token.TokenType.NOTEQUAL);
+                nextChar();
+
+                if (!(isOperatorEndingValid())) {
+                    abort("Invalid operator '!=" + peekChar() + "'");
+                }
+            } else {
+                abort("Invalid operator '!" + peekChar() + "'");
+            }
+
+        } else if (currChar == '\"') { // string
+            token = getStringToken();
+
+        } else if (Character.isDigit(currChar)) { // numbers
             token = getNumberToken();
 
-        } else if (Character.isAlphabetic(currChar) || Character.isDigit(currChar)) {
+        } else if (Character.isAlphabetic(currChar) || Character.isDigit(currChar)) { // keywords or identifiers
             token = getKeywordToken();
 
         } else {
@@ -73,6 +133,33 @@ public class LexerImpl implements Lexer {
         }
 
         nextChar();
+
+        return token;
+    }
+
+    private boolean isOperatorEndingValid() {
+        return Character.isDigit(peekChar()) || Character.isAlphabetic(peekChar()) || Character.isWhitespace(peekChar());
+    }
+
+    private Token getStringToken() throws LexerException {
+        Token token = null;
+
+        StringBuilder stb = new StringBuilder();
+        stb.append('\"');
+        nextChar();
+
+        while (currChar != '\"' && currChar != '\0') {
+            stb.append(currChar);
+            nextChar();
+        }
+
+        if (currChar == '\"') {
+            stb.append('\"');
+        } else {
+            abort("Invalid string - no closing quote");
+        }
+
+        token = new TokenImpl(stb.toString(), Token.TokenType.STRING);
 
         return token;
     }
@@ -86,6 +173,7 @@ public class LexerImpl implements Lexer {
             stb.append(currChar);
             nextChar();
         }
+        prevChar();
 
         if (Character.isAlphabetic(currChar)) {
             abort("Invalid number");
@@ -105,8 +193,13 @@ public class LexerImpl implements Lexer {
             stb.append(currChar);
             nextChar();
         }
+        prevChar();
 
-        token = new TokenImpl(stb.toString(), Token.TokenType.IDENT);
+        if (Arrays.stream(Token.TokenType.values()).anyMatch(t -> t.name().contentEquals(stb))) {
+            token = new TokenImpl(stb.toString(), Token.TokenType.valueOf(stb.toString()));
+        } else {
+            token = new TokenImpl(stb.toString(), Token.TokenType.IDENTIFIER);
+        }
 
         return token;
     }
@@ -118,6 +211,16 @@ public class LexerImpl implements Lexer {
             return;
         }
 
+        currChar = '\0';
+    }
+
+    private void prevChar() {
+        if (currPos > 0) {
+            currChar = source.charAt(--currPos);
+            return;
+        }
+
+        currPos = -1;
         currChar = '\0';
     }
 

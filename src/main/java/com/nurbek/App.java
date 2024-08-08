@@ -2,13 +2,7 @@ package com.nurbek;
 
 public class App {
     public static void main(String[] args) {
-        String source = """
-            + - * / == >= <= < >
-            23 290 023
-            n1
-            hello23
-            23fd
-         """;
+        String source = "LET var= var +1";
 
         Lexer lexer = new LexerImpl(source);
 

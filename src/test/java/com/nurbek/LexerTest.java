@@ -40,7 +40,7 @@ public class LexerTest {
     @Test
     public void shouldCorrectlyTokenizeOperators() {
         String source = """
-                + - = / < > == <= >=
+                + - = / < > == <= >= !=
                 """;
 
         List<Token.TokenType> list = new ArrayList<>();
@@ -53,6 +53,7 @@ public class LexerTest {
         list.add(Token.TokenType.EQUALS);
         list.add(Token.TokenType.LESS_EQUAL);
         list.add(Token.TokenType.GREATER_EQUAL);
+        list.add(Token.TokenType.NOTEQUAL);
 
         Lexer lexer = new LexerImpl(source);
 
@@ -65,6 +66,85 @@ public class LexerTest {
                 assertThat(token.getType()).isEqualTo(list.get(i));
                 i++;
             }
+        } catch (Exception e) {
+            fail(e.getClass().getSimpleName() + " " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldCorrectlySplitTokens() {
+        String source = """
+                LET var=var+223
+                """;
+
+        Lexer lexer = new LexerImpl(source);
+
+        List<Token.TokenType> list = new ArrayList<>();
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.PLUS);
+        list.add(Token.TokenType.NUMBER);
+
+        Token token = null;
+
+        try {
+            int i = 0;
+
+            while ((token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
+                assertThat(token.getType()).isEqualTo(list.get(i));
+                i++;
+            }
+        } catch (Exception e) {
+            fail(e.getClass().getSimpleName() + " " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldCorrectlySplitTokens2() {
+        String source = """
+                PRINT \"How many fibonacci numbers do you want?\"
+                INPUT nums
+                
+                LET a= 0
+                LET b =1
+                
+                WHILE nums>=0 REPEAT
+                    PRINT a
+                    LET c = a + b
+                    LET a = b
+                    LET b = c
+                    LET nums = nums-1      
+                ENDWHILE
+                
+                """;
+
+        Lexer lexer = new LexerImpl(source);
+
+        List<Token.TokenType> list = new ArrayList<>();
+        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.STRING);
+        list.add(Token.TokenType.INPUT); list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.WHILE); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.GREATER_EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.REPEAT);
+        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.PLUS); list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.MINUS);list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.ENDWHILE);
+
+        Token token = null;
+
+        try {
+            int i = 0;
+
+            while ((token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
+                assertThat(token.getType()).isEqualTo(list.get(i));
+                i++;
+            }
+
         } catch (Exception e) {
             fail(e.getClass().getSimpleName() + " " + e.getMessage());
         }
