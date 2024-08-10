@@ -2,17 +2,27 @@ package com.nurbek;
 
 public class App {
     public static void main(String[] args) {
-        String source = "LET var= var +1\n hello";
+        String source = """
+                PRINT "How many fibonacci numbers do you want?"
+                INPUT nums
+                                
+                LET a = 0
+                LET b = 1
+                WHILE nums > 0 REPEAT
+                    PRINT a
+                    LET c = a + b
+                    LET a = b
+                    LET b = c
+                    LET nums = nums - 1
+                ENDWHILE
+                """;
 
         Lexer lexer = new LexerImpl(source);
 
         try {
-            Token token = null;
+            Parser parser = new ParserImpl(lexer);
 
-            while ( (token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
-                System.out.println(token.getType() + " " + token.getText());
-            }
-
+            parser.program();
         } catch (Exception e) {
             System.out.println(e);
         }
