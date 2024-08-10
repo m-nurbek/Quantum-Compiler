@@ -1,4 +1,5 @@
 PRINT "How many fibonacci numbers do you want?"
+
 INPUT nums
 
 LET a = 0

@@ -1,30 +1,36 @@
 package com.nurbek;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class App {
     public static void main(String[] args) {
-        String source = """
-                PRINT "How many fibonacci numbers do you want?"
-                INPUT nums
-                                
-                LET a = 0
-                LET b = 1
-                WHILE nums > 0 REPEAT
-                    PRINT a
-                    LET c = a + b
-                    LET a = b
-                    LET b = c
-                    LET nums = nums - 1
-                ENDWHILE
-                """;
+        File file = new File("src/main/resources/" + args[0]);
 
-        Lexer lexer = new LexerImpl(source);
+        StringBuilder source = new StringBuilder();
 
-        try {
-            Parser parser = new ParserImpl(lexer);
+        try (Scanner scanner = new Scanner(file)){
+            while (scanner.hasNextLine()) {
+                source.append(scanner.nextLine()).append("\n");
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found");
+            return;
+        }
 
-            parser.program();
-        } catch (Exception e) {
-            System.out.println(e);
+        if (file.exists()) {
+            Lexer lexer = new LexerImpl(source.toString());
+
+            try {
+                Parser parser = new ParserImpl(lexer);
+
+                parser.program();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } else {
+            System.out.println("The file does not exist.");
         }
 
     }

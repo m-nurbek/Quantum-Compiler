@@ -42,6 +42,7 @@ public class ParserImpl implements Parser {
         throw new ParserException("Parser Error: " + message);
     }
 
+    // program ::= {statement}
     public void program() throws LexerException, ParserException {
         System.out.println("--------- PROGRAM ---------");
 
