@@ -2,7 +2,7 @@ package com.nurbek;
 
 public class App {
     public static void main(String[] args) {
-        String source = "LET var= var +1";
+        String source = "LET var= var +1\n hello";
 
         Lexer lexer = new LexerImpl(source);
 

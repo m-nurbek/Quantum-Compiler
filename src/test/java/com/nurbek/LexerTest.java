@@ -54,6 +54,8 @@ public class LexerTest {
         list.add(Token.TokenType.LESS_EQUAL);
         list.add(Token.TokenType.GREATER_EQUAL);
         list.add(Token.TokenType.NOTEQUAL);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.EOF);
 
         Lexer lexer = new LexerImpl(source);
 
@@ -86,6 +88,8 @@ public class LexerTest {
         list.add(Token.TokenType.IDENTIFIER);
         list.add(Token.TokenType.PLUS);
         list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.EOF);
 
         Token token = null;
 
@@ -123,17 +127,20 @@ public class LexerTest {
         Lexer lexer = new LexerImpl(source);
 
         List<Token.TokenType> list = new ArrayList<>();
-        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.STRING);
-        list.add(Token.TokenType.INPUT); list.add(Token.TokenType.IDENTIFIER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER);
-        list.add(Token.TokenType.WHILE); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.GREATER_EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.REPEAT);
-        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.IDENTIFIER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.PLUS); list.add(Token.TokenType.IDENTIFIER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.MINUS);list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.STRING); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.INPUT); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.WHILE); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.GREATER_EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.REPEAT); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.PLUS); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.MINUS);list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE);
         list.add(Token.TokenType.ENDWHILE);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.EOF);
 
         Token token = null;
 

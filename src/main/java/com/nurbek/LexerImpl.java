@@ -173,11 +173,12 @@ public class LexerImpl implements Lexer {
             stb.append(currChar);
             nextChar();
         }
-        prevChar();
 
         if (Character.isAlphabetic(currChar)) {
             abort("Invalid number");
         }
+
+        prevChar();
 
         token = new TokenImpl(stb.toString(), Token.TokenType.NUMBER);
 
@@ -189,7 +190,7 @@ public class LexerImpl implements Lexer {
 
         StringBuilder stb = new StringBuilder();
 
-        while (Character.isAlphabetic(currChar) || Character.isDigit(currChar)) {
+        while (Character.isAlphabetic(currChar) || Character.isDigit(currChar) || currChar == '_') {
             stb.append(currChar);
             nextChar();
         }
@@ -239,7 +240,7 @@ public class LexerImpl implements Lexer {
 
     @Override
     public void skipWhitespace() {
-        while (Character.isWhitespace(currChar)) {
+        while (Character.isWhitespace(currChar) && currChar != '\n' && currChar != '\0') {
             nextChar();
         }
     }
