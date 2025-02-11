@@ -1,6 +1,6 @@
 # Quantum Compiler 1
 
-This compiler will compile code that looks like BASIC to a java program.
+This compiler will compile the code that looks like BASIC to a python program :-D
 
 Tutorial: [Teeny Tiny Compiler](https://austinhenley.com/blog/teenytinycompiler1.html)
 
@@ -26,7 +26,6 @@ The language compiler supports:
 * While loops
 * Print text and numbers
 * Input numbers
-* Labels and goto
 * Comments
 
 ### Language Grammar
@@ -35,8 +34,6 @@ program ::= {statement}
 statement ::= "PRINT" (expression | string) nl
 | "IF" comparison "THEN" nl {statement} "ENDIF" nl
 | "WHILE" comparison "REPEAT" nl {statement} "ENDWHILE" nl
-| "LABEL" ident nl
-| "GOTO" ident nl
 | "LET" ident "=" expression nl
 | "INPUT" ident nl
 comparison ::= expression (("==" | "!=" | ">" | ">=" | "<" | "<=") expression)+
