@@ -1,16 +1,18 @@
-package com.nurbek.compiler;
+package com.nurbek.compiler.component.impl;
 
-import com.nurbek.compiler.exceptions.LexerException;
+import com.nurbek.compiler.component.Token;
+import com.nurbek.compiler.component.Lexer;
+import com.nurbek.compiler.exception.LexerException;
 
 import java.util.Arrays;
 
 public class LexerImpl implements Lexer {
-    private final String source;
+    private String source;
     private int currPos;
     private char currChar;
 
-
-    public LexerImpl(String source) {
+    @Override
+    public void setSource(String source) {
         this.source = source + "\0";
         currPos = -1;
         currChar = '\0';

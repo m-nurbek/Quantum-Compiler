@@ -1,13 +1,29 @@
-package com.nurbek;
+package com.nurbek.compiler;
+
+import com.nurbek.compiler.component.Emitter;
+import com.nurbek.compiler.component.Lexer;
+import com.nurbek.compiler.component.impl.EmitterImpl;
+import com.nurbek.compiler.component.impl.LexerImpl;
+import com.nurbek.compiler.component.Parser;
+import com.nurbek.compiler.component.impl.ParserImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Application {
-    
-    public static void main(String[] args) throws Exception {
-        File file = new File("src/main/resources/" + args[0]);
+    private final Lexer lexer;
+    private final Emitter emitter;
+    private final Parser parser;
+
+    public Application(Lexer lexer, Emitter emitter, Parser parser) {
+        this.lexer = lexer;
+        this.emitter = emitter;
+        this.parser = parser;
+    }
+
+    public void compile(String sourceFilePath, String outputFilePath) throws Exception {
+        File file = new File(sourceFilePath);
 
         if (!file.exists()) {
             throw new FileNotFoundException("The file does not exist.");
@@ -21,13 +37,27 @@ public class Application {
             }
         }
 
-        Lexer lexer = new LexerImpl(source.toString());
+        lexer.setSource(source.toString());
+        emitter.setOutputFile(outputFilePath);
+        parser.setLexer(lexer);
+        parser.setEmitter(emitter);
 
         try {
-            Parser parser = new ParserImpl(lexer);
             parser.program();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+
+        emitter.writeFile();
+        System.out.println("Compilation is completed");
+    }
+
+    public static void main(String[] args) throws Exception {
+        Lexer lexer = new LexerImpl();
+        Emitter emitter = new EmitterImpl();
+        Parser parser = new ParserImpl();
+
+        Application app = new Application(lexer, emitter, parser);
+        app.compile("src/main/resources/" + args[0], "src/main/resources/out.py");
     }
 }

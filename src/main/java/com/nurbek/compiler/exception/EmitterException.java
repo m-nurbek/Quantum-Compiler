@@ -1,6 +1,6 @@
-package com.nurbek.compiler.exceptions;
+package com.nurbek.compiler.exception;
 
-public class EmitterException extends Exception {
+public class EmitterException extends RuntimeException {
     public EmitterException(String message) {
         super(message);
     }

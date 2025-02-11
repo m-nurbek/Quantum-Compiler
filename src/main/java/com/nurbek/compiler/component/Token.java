@@ -1,4 +1,4 @@
-package com.nurbek.compiler;
+package com.nurbek.compiler.component;
 
 public interface Token {
 

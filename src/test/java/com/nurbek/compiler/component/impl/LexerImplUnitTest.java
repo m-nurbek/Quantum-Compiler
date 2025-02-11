@@ -2,16 +2,21 @@ package com.nurbek.compiler.component.impl;
 
 import com.nurbek.compiler.component.Lexer;
 import com.nurbek.compiler.component.Token;
+import com.nurbek.compiler.exception.LexerException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class LexerUnitTest {
+public class LexerImplUnitTest {
 
     @Test
     public void shouldCorrectlySplitCharacters() {
@@ -204,4 +209,42 @@ public class LexerUnitTest {
         }
     }
 
+    // SUCCESS UNIT TESTS
+    private static Stream<String> validData() {
+        return Stream.of(
+                " < ", " > ", " >= ", " <= ", " == ", " != ",
+                " = ", " + ", " - ", " / ", " * ", "Eq1",
+                " <df ", " >12", " >=var1 ", " <=df ", " ==23 ", " !=var2 ",
+                "25=34 ", " +2 ", "2-1 ", " 2/2 ", "2*2", "qw_1"
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("validData")
+    void shouldNotFailOnInvalidToken(String source) {
+        Lexer lexer = new LexerImpl();
+        lexer.setSource(source);
+
+        try {
+            while (lexer.nextToken().type() != Token.TokenType.EOF) {
+            }
+        } catch (Exception e) {
+            fail(e.getClass().getSimpleName() + " " + e.getMessage());
+        }
+    }
+
+    // FAIL UNIT TESTS
+    private static Stream<String> invalidData() {
+        return Stream.of("<<", ">>=", "=!", "1ewq", "+-", "-+", "===", "!!=", "!=");
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidData")
+    public void shouldFailOnInvalidToken(String source) throws LexerException {
+        assertThrows(LexerException.class, () -> {
+            Lexer lexer = new LexerImpl();
+            lexer.setSource(source);
+            lexer.nextToken();
+        });
+    }
 }

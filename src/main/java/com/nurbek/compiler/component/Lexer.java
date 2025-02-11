@@ -1,8 +1,10 @@
-package com.nurbek.compiler;
+package com.nurbek.compiler.component;
 
-import com.nurbek.compiler.exceptions.LexerException;
+import com.nurbek.compiler.exception.LexerException;
 
 public interface Lexer {
+
+    void setSource(String string);
 
     // get next token
     Token nextToken() throws LexerException;
@@ -25,5 +27,4 @@ public interface Lexer {
     char getCurrChar();
 
     int getCurrPos();
-
 }

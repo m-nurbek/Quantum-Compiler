@@ -1,4 +1,4 @@
-package com.nurbek.compiler;
+package com.nurbek.compiler.component;
 
 public interface Emitter {
 
@@ -10,4 +10,5 @@ public interface Emitter {
 
     void writeFile();
 
+    void setOutputFile(String outputFilePath);
 }

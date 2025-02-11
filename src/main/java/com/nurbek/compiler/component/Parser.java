@@ -1,7 +1,7 @@
-package com.nurbek.compiler;
+package com.nurbek.compiler.component;
 
-import com.nurbek.compiler.exceptions.LexerException;
-import com.nurbek.compiler.exceptions.ParserException;
+import com.nurbek.compiler.exception.LexerException;
+import com.nurbek.compiler.exception.ParserException;
 
 public interface Parser {
 
@@ -17,4 +17,7 @@ public interface Parser {
 
     void program() throws LexerException, ParserException;
 
+    void setLexer(Lexer lexer);
+
+    void setEmitter(Emitter emitter);
 }

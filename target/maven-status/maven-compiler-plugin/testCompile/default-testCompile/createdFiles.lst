@@ -1,1 +1,2 @@
-com\nurbek\AppTest.class
+com\nurbek\compiler\component\impl\LexerImplUnitTest.class
+com\nurbek\compiler\ApplicationUnitTest.class
