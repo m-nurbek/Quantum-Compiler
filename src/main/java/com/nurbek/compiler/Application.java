@@ -2,9 +2,9 @@ package com.nurbek.compiler;
 
 import com.nurbek.compiler.component.Emitter;
 import com.nurbek.compiler.component.Lexer;
+import com.nurbek.compiler.component.Parser;
 import com.nurbek.compiler.component.impl.EmitterImpl;
 import com.nurbek.compiler.component.impl.LexerImpl;
-import com.nurbek.compiler.component.Parser;
 import com.nurbek.compiler.component.impl.PythonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,7 +4,6 @@ com\nurbek\compiler\component\Emitter.class
 com\nurbek\compiler\component\Token$TokenType.class
 com\nurbek\compiler\exception\EmitterException.class
 com\nurbek\compiler\component\impl\TokenImpl.class
-com\nurbek\compiler\component\impl\ParserImpl.class
 com\nurbek\compiler\exception\ParserException.class
 com\nurbek\compiler\component\Parser.class
 com\nurbek\compiler\exception\LexerException.class

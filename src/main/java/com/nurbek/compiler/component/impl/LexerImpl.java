@@ -1,7 +1,7 @@
 package com.nurbek.compiler.component.impl;
 
-import com.nurbek.compiler.component.Token;
 import com.nurbek.compiler.component.Lexer;
+import com.nurbek.compiler.component.Token;
 import com.nurbek.compiler.exception.LexerException;
 
 import java.util.Arrays;
@@ -13,6 +13,7 @@ public class LexerImpl implements Lexer {
 
     @Override
     public void setSource(String source) {
+        checkSource(source);
         this.source = source + "\0";
         currPos = -1;
         currChar = '\0';
@@ -20,8 +21,16 @@ public class LexerImpl implements Lexer {
         nextChar();
     }
 
+    private static void checkSource(String source) {
+        if (source == null) {
+            throw new NullPointerException("Source cannot be null");
+        }
+    }
+
     @Override
-    public Token nextToken() throws LexerException {
+    public Token nextToken() {
+        checkSource(source);
+
         skipComment();
         skipWhitespace();
 
@@ -145,7 +154,7 @@ public class LexerImpl implements Lexer {
         return Character.isDigit(peekChar()) || Character.isAlphabetic(peekChar()) || Character.isWhitespace(peekChar());
     }
 
-    private Token getStringToken() throws LexerException {
+    private Token getStringToken() {
         Token token = null;
 
         StringBuilder stb = new StringBuilder();
@@ -168,7 +177,7 @@ public class LexerImpl implements Lexer {
         return token;
     }
 
-    private Token getNumberToken() throws LexerException {
+    private Token getNumberToken() {
         Token token = null;
 
         StringBuilder stb = new StringBuilder();
@@ -238,7 +247,7 @@ public class LexerImpl implements Lexer {
     }
 
     @Override
-    public void abort(String message) throws LexerException {
+    public void abort(String message) {
         throw new LexerException("ERROR: " + message);
     }
 

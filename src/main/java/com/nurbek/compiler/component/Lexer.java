@@ -1,13 +1,11 @@
 package com.nurbek.compiler.component;
 
-import com.nurbek.compiler.exception.LexerException;
-
 public interface Lexer {
 
     void setSource(String string);
 
     // get next token
-    Token nextToken() throws LexerException;
+    Token nextToken();
 
     // proceed to next character
     void nextChar();
@@ -16,7 +14,7 @@ public interface Lexer {
     char peekChar();
 
     // log the error message
-    void abort(String message) throws LexerException;
+    void abort(String message);
 
     // skip the whitespace characters
     void skipWhitespace();

@@ -26,6 +26,10 @@
         <maven.failsafe>2.22.2</maven.failsafe>
         <jacoco.version>0.8.12</jacoco.version>
         <maven.compiler.plugin>3.13.0</maven.compiler.plugin>
+
+        <!--   Configuration properties   -->
+        <failsafe.argLine></failsafe.argLine>
+        <surfire.argLine></surfire.argLine>
     </properties>
 
     <dependencies>
@@ -55,6 +59,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>

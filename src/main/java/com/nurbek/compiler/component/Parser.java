@@ -1,21 +1,18 @@
 package com.nurbek.compiler.component;
 
-import com.nurbek.compiler.exception.LexerException;
-import com.nurbek.compiler.exception.ParserException;
-
 public interface Parser {
 
     boolean checkToken(Token.TokenType type);
 
     boolean checkPeek(Token.TokenType type);
 
-    void match(Token.TokenType type) throws ParserException, LexerException;
+    void match(Token.TokenType type);
 
-    void nextToken() throws LexerException;
+    void nextToken();
 
-    void abort(String message) throws ParserException;
+    void abort(String message);
 
-    void program() throws LexerException, ParserException;
+    void program();
 
     void setLexer(Lexer lexer);
 

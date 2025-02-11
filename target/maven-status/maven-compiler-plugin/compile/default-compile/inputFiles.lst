@@ -2,7 +2,7 @@ D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\Application.j
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\Emitter.java
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\impl\EmitterImpl.java
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\impl\LexerImpl.java
-D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\impl\ParserImpl.java
+D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\impl\PythonParser.java
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\impl\TokenImpl.java
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\Lexer.java
 D:\JavaProjects\Quantum-Compiler\src\main\java\com\nurbek\compiler\component\Parser.java

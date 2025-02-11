@@ -1,11 +1,9 @@
 package com.nurbek.compiler.component.impl;
 
-import com.nurbek.compiler.Application;
 import com.nurbek.compiler.component.Emitter;
 import com.nurbek.compiler.component.Lexer;
 import com.nurbek.compiler.component.Parser;
 import com.nurbek.compiler.component.Token;
-import com.nurbek.compiler.exception.LexerException;
 import com.nurbek.compiler.exception.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +34,7 @@ public class PythonParser implements Parser {
     }
 
     @Override
-    public void match(Token.TokenType type) throws ParserException, LexerException {
+    public void match(Token.TokenType type) {
         if (!checkToken(type)) {
             abort("Expected Token '" + type + "', but got '" + currToken.type() + "'");
         }
@@ -44,18 +42,18 @@ public class PythonParser implements Parser {
     }
 
     @Override
-    public void nextToken() throws LexerException {
+    public void nextToken() {
         currToken = peekToken;
         peekToken = lexer.nextToken();
     }
 
     @Override
-    public void abort(String message) throws ParserException {
+    public void abort(String message) {
         throw new ParserException("Parser Error: " + message);
     }
 
     // program ::= {statement}
-    public void program() throws LexerException, ParserException {
+    public void program() {
         log.debug("--------- PROGRAM ---------");
 
         // Skip new lines
@@ -90,7 +88,7 @@ public class PythonParser implements Parser {
     //      | "WHILE" comparison "REPEAT" nl {statement} "ENDWHILE" nl
     //      | "LET" ident "=" expression nl
     //      | "INPUT" ident nl
-    private void statement() throws LexerException, ParserException {
+    private void statement() {
         output.append("STATEMENT ::= ");
 
         if (checkToken(Token.TokenType.PRINT)) {
@@ -185,7 +183,7 @@ public class PythonParser implements Parser {
     }
 
     // comparison ::= expression (("==" | "!=" | ">" | ">=" | "<" | "<=") expression)+
-    private void comparison() throws LexerException, ParserException {
+    private void comparison() {
         output.append("COMPARISON ");
         expression();
 
@@ -214,7 +212,7 @@ public class PythonParser implements Parser {
     }
 
     // expression ::= term {( "-" | "+" ) term}
-    private void expression() throws LexerException, ParserException {
+    private void expression() {
         output.append("EXPRESSION ");
         term();
 
@@ -227,7 +225,7 @@ public class PythonParser implements Parser {
     }
 
     // term ::= unary {( "/" | "*" ) unary}
-    private void term() throws LexerException, ParserException {
+    private void term() {
         output.append("TERM ");
         unary();
 
@@ -240,7 +238,7 @@ public class PythonParser implements Parser {
     }
 
     // unary ::= ["+" | "-"] primary
-    private void unary() throws LexerException, ParserException {
+    private void unary() {
         output.append("UNARY ");
 
         if (checkToken(Token.TokenType.PLUS) || checkToken(Token.TokenType.MINUS)) {
@@ -253,7 +251,7 @@ public class PythonParser implements Parser {
     }
 
     // primary ::= number | ident
-    private void primary() throws LexerException, ParserException {
+    private void primary() {
         output.append("PRIMARY (" + currToken.text() + ") ");
         emitter.emit(currToken.text());
 
@@ -267,7 +265,7 @@ public class PythonParser implements Parser {
     }
 
     // nl ::= '\n'+
-    private void newline() throws LexerException, ParserException {
+    private void newline() {
         output.append("NEWLINE\n");
         match(Token.TokenType.NEWLINE);
 
