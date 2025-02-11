@@ -1,4 +1,4 @@
-package com.nurbek;
+package com.nurbek.compiler;
 
 public interface Emitter {
 

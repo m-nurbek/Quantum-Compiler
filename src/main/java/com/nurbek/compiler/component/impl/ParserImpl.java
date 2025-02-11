@@ -1,4 +1,7 @@
-package com.nurbek;
+package com.nurbek.compiler;
+
+import com.nurbek.compiler.exceptions.LexerException;
+import com.nurbek.compiler.exceptions.ParserException;
 
 public class ParserImpl implements Parser {
     private final Lexer lexer;

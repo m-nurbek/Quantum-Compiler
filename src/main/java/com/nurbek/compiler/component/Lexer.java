@@ -1,4 +1,6 @@
-package com.nurbek;
+package com.nurbek.compiler;
+
+import com.nurbek.compiler.exceptions.LexerException;
 
 public interface Lexer {
 

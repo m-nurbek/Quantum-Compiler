@@ -1,6 +1,8 @@
-package com.nurbek;
+package com.nurbek.compiler.component.impl;
 
-import org.junit.Test;
+import com.nurbek.compiler.component.Lexer;
+import com.nurbek.compiler.component.Token;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -9,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class LexerTest {
+public class LexerUnitTest {
 
     @Test
     public void shouldCorrectlySplitCharacters() {
@@ -19,7 +21,8 @@ public class LexerTest {
                 How are you?
                 """;
 
-        Lexer lexer = new LexerImpl(source);
+        Lexer lexer = new LexerImpl();
+        lexer.setSource(source);
 
         List<Character> list = new LinkedList<>();
 
@@ -57,15 +60,16 @@ public class LexerTest {
         list.add(Token.TokenType.NEWLINE);
         list.add(Token.TokenType.EOF);
 
-        Lexer lexer = new LexerImpl(source);
+        Lexer lexer = new LexerImpl();
+        lexer.setSource(source);
 
         Token token = null;
 
         try {
             int i = 0;
 
-            while ((token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
-                assertThat(token.getType()).isEqualTo(list.get(i));
+            while ((token = lexer.nextToken()).type() != Token.TokenType.EOF) {
+                assertThat(token.type()).isEqualTo(list.get(i));
                 i++;
             }
         } catch (Exception e) {
@@ -79,7 +83,8 @@ public class LexerTest {
                 LET var=var+223
                 """;
 
-        Lexer lexer = new LexerImpl(source);
+        Lexer lexer = new LexerImpl();
+        lexer.setSource(source);
 
         List<Token.TokenType> list = new ArrayList<>();
         list.add(Token.TokenType.LET);
@@ -96,8 +101,8 @@ public class LexerTest {
         try {
             int i = 0;
 
-            while ((token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
-                assertThat(token.getType()).isEqualTo(list.get(i));
+            while ((token = lexer.nextToken()).type() != Token.TokenType.EOF) {
+                assertThat(token.type()).isEqualTo(list.get(i));
                 i++;
             }
         } catch (Exception e) {
@@ -124,19 +129,61 @@ public class LexerTest {
                 
                 """;
 
-        Lexer lexer = new LexerImpl(source);
+        Lexer lexer = new LexerImpl();
+        lexer.setSource(source);
 
         List<Token.TokenType> list = new ArrayList<>();
-        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.STRING); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.INPUT); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.WHILE); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.GREATER_EQUAL); list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.REPEAT); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.PRINT); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.PLUS); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.NEWLINE);
-        list.add(Token.TokenType.LET); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.EQUAL); list.add(Token.TokenType.IDENTIFIER); list.add(Token.TokenType.MINUS);list.add(Token.TokenType.NUMBER); list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.PRINT);
+        list.add(Token.TokenType.STRING);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.INPUT);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.WHILE);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.GREATER_EQUAL);
+        list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.REPEAT);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.PRINT);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.PLUS);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.NEWLINE);
+        list.add(Token.TokenType.LET);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.EQUAL);
+        list.add(Token.TokenType.IDENTIFIER);
+        list.add(Token.TokenType.MINUS);
+        list.add(Token.TokenType.NUMBER);
+        list.add(Token.TokenType.NEWLINE);
         list.add(Token.TokenType.ENDWHILE);
         list.add(Token.TokenType.NEWLINE);
         list.add(Token.TokenType.NEWLINE);
@@ -147,8 +194,8 @@ public class LexerTest {
         try {
             int i = 0;
 
-            while ((token = lexer.nextToken()).getType() != Token.TokenType.EOF) {
-                assertThat(token.getType()).isEqualTo(list.get(i));
+            while ((token = lexer.nextToken()).type() != Token.TokenType.EOF) {
+                assertThat(token.type()).isEqualTo(list.get(i));
                 i++;
             }
 

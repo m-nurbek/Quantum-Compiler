@@ -1,16 +1,16 @@
-package com.nurbek;
+package com.nurbek.compiler;
 
 public interface Token {
 
-    TokenType getType();
+    TokenType type();
 
-    String getText();
+    String text();
 
     enum TokenType {
         NUMBER, STRING,
 
         // keywords
-        LABEL, GOTO, PRINT, INPUT, LET,
+        PRINT, INPUT, LET,
         IF, THEN, ENDIF,
         WHILE, REPEAT, ENDWHILE,
 

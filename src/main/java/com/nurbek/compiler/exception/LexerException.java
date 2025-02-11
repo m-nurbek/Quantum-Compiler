@@ -1,4 +1,4 @@
-package com.nurbek;
+package com.nurbek.compiler.exceptions;
 
 import java.io.Serial;
 

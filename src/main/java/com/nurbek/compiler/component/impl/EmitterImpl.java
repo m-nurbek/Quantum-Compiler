@@ -1,4 +1,4 @@
-package com.nurbek;
+package com.nurbek.compiler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 public class EmitterImpl implements Emitter {
     private final String fullPath;
-    private StringBuilder header;
-    private StringBuilder body;
+    private final StringBuilder header;
+    private final StringBuilder body;
 
     public EmitterImpl(String fullPath) {
         this.fullPath = fullPath;
