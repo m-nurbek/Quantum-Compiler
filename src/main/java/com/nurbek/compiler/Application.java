@@ -5,7 +5,9 @@ import com.nurbek.compiler.component.Lexer;
 import com.nurbek.compiler.component.impl.EmitterImpl;
 import com.nurbek.compiler.component.impl.LexerImpl;
 import com.nurbek.compiler.component.Parser;
-import com.nurbek.compiler.component.impl.ParserImpl;
+import com.nurbek.compiler.component.impl.PythonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +17,8 @@ public class Application {
     private final Lexer lexer;
     private final Emitter emitter;
     private final Parser parser;
+
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     public Application(Lexer lexer, Emitter emitter, Parser parser) {
         this.lexer = lexer;
@@ -49,13 +53,13 @@ public class Application {
         }
 
         emitter.writeFile();
-        System.out.println("Compilation is completed");
+        log.info("======== Compilation is completed! ========");
     }
 
     public static void main(String[] args) throws Exception {
         Lexer lexer = new LexerImpl();
         Emitter emitter = new EmitterImpl();
-        Parser parser = new ParserImpl();
+        Parser parser = new PythonParser();
 
         Application app = new Application(lexer, emitter, parser);
         app.compile("src/main/resources/" + args[0], "src/main/resources/out.py");

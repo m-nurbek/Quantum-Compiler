@@ -19,6 +19,7 @@
         <!--   Dependency versions   -->
         <assertj.core.version>3.26.3</assertj.core.version>
         <junit.jupiter.version>RELEASE</junit.jupiter.version>
+        <logging.version>2.23.1</logging.version>
 
         <!--   Plugin versions   -->
         <maven.surefire>2.22.2</maven.surefire>
@@ -28,6 +29,23 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+            <version>${logging.version}</version>
+        </dependency>
+
+        <!--    TESTING    -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

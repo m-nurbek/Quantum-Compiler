@@ -1,19 +1,25 @@
 package com.nurbek.compiler.component.impl;
 
+import com.nurbek.compiler.Application;
 import com.nurbek.compiler.component.Emitter;
 import com.nurbek.compiler.component.Lexer;
 import com.nurbek.compiler.component.Parser;
 import com.nurbek.compiler.component.Token;
 import com.nurbek.compiler.exception.LexerException;
 import com.nurbek.compiler.exception.ParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ParserImpl implements Parser {
+public class PythonParser implements Parser {
     private Lexer lexer;
     private Emitter emitter;
     private Token currToken;
     private Token peekToken;
-
     private int currentTabSize = 0;
+
+    // output will be used in logging
+    private final StringBuilder output = new StringBuilder();
+    private static final Logger log = LoggerFactory.getLogger(PythonParser.class);
 
     private String appendTabs() {
         return "\t".repeat(Math.max(0, currentTabSize));
@@ -50,7 +56,7 @@ public class ParserImpl implements Parser {
 
     // program ::= {statement}
     public void program() throws LexerException, ParserException {
-        System.out.println("--------- PROGRAM ---------");
+        log.debug("--------- PROGRAM ---------");
 
         // Skip new lines
         while (checkToken(Token.TokenType.NEWLINE)) {
@@ -61,7 +67,8 @@ public class ParserImpl implements Parser {
             statement();
         }
 
-        System.out.println("---- PARSING COMPLETED ----");
+        log.debug("\n\n" + output);
+        log.debug("---- PARSING COMPLETED ----");
     }
 
     @Override
@@ -84,14 +91,14 @@ public class ParserImpl implements Parser {
     //      | "LET" ident "=" expression nl
     //      | "INPUT" ident nl
     private void statement() throws LexerException, ParserException {
-        System.out.print("STATEMENT ::= ");
+        output.append("STATEMENT ::= ");
 
         if (checkToken(Token.TokenType.PRINT)) {
-            System.out.print("PRINT ");
+            output.append("PRINT ");
             nextToken();
 
             if (checkToken(Token.TokenType.STRING)) {
-                System.out.print("STRING (" + currToken.text() + ") ");
+                output.append("STRING (" + currToken.text() + ") ");
 
                 emitter.emitLine(appendTabs() + "print(" + currToken.text() + ")");
                 nextToken();
@@ -101,14 +108,14 @@ public class ParserImpl implements Parser {
                 emitter.emitLine(")");
             }
         } else if (checkToken(Token.TokenType.IF)) {
-            System.out.print("IF ");
+            output.append("IF ");
             nextToken();
 
             emitter.emit(appendTabs() + "if ");
 
             comparison();
 
-            System.out.print(currToken.type() + " ");
+            output.append(currToken.type() + " ");
             match(Token.TokenType.THEN);
             newline();
 
@@ -119,21 +126,21 @@ public class ParserImpl implements Parser {
                 statement();
             }
 
-            System.out.print(currToken.type() + " ");
+            output.append(currToken.type() + " ");
             match(Token.TokenType.ENDIF);
 
             emitter.emitLine("");
             currentTabSize--;
 
         } else if (checkToken(Token.TokenType.WHILE)) {
-            System.out.print("WHILE ");
+            output.append("WHILE ");
             nextToken();
 
             emitter.emit(appendTabs() + "while ");
 
             comparison();
 
-            System.out.print(currToken.type() + " ");
+            output.append(currToken.type() + " ");
             match(Token.TokenType.REPEAT);
             newline();
 
@@ -144,30 +151,30 @@ public class ParserImpl implements Parser {
                 statement();
             }
 
-            System.out.print(currToken.type() + " ");
+            output.append(currToken.type() + " ");
             match(Token.TokenType.ENDWHILE);
 
             emitter.emitLine("");
             currentTabSize--;
 
         } else if (checkToken(Token.TokenType.LET)) {
-            System.out.print("LET ");
+            output.append("LET ");
             nextToken();
 
             emitter.emit(appendTabs() + currToken.text() + " = ");
-            System.out.print("IDENTIFIER (" + currToken.text() + ") ");
+            output.append("IDENTIFIER (" + currToken.text() + ") ");
             match(Token.TokenType.IDENTIFIER);
-            System.out.print("EQUAL (" + currToken.text() + ") ");
+            output.append("EQUAL (" + currToken.text() + ") ");
             match(Token.TokenType.EQUAL);
 
             expression();
             emitter.emitLine("");
 
         } else if (checkToken(Token.TokenType.INPUT)) {
-            System.out.print("INPUT ");
+            output.append("INPUT ");
             nextToken();
 
-            System.out.print("IDENTIFIER (" + currToken.text() + ") ");
+            output.append("IDENTIFIER (" + currToken.text() + ") ");
             emitter.emitLine(appendTabs() + currToken.text() + " = int(input())");
             match(Token.TokenType.IDENTIFIER);
         } else {
@@ -179,11 +186,11 @@ public class ParserImpl implements Parser {
 
     // comparison ::= expression (("==" | "!=" | ">" | ">=" | "<" | "<=") expression)+
     private void comparison() throws LexerException, ParserException {
-        System.out.print("COMPARISON ");
+        output.append("COMPARISON ");
         expression();
 
         if (isComparisonOperator()) {
-            System.out.print(currToken.text() + " ");
+            output.append(currToken.text() + " ");
 
             emitter.emit(currToken.text());
             nextToken();
@@ -193,7 +200,7 @@ public class ParserImpl implements Parser {
         }
 
         while (isComparisonOperator()) {
-            System.out.print(currToken.text() + " ");
+            output.append(currToken.text() + " ");
             emitter.emit(currToken.text());
             nextToken();
             expression();
@@ -208,11 +215,11 @@ public class ParserImpl implements Parser {
 
     // expression ::= term {( "-" | "+" ) term}
     private void expression() throws LexerException, ParserException {
-        System.out.print("EXPRESSION ");
+        output.append("EXPRESSION ");
         term();
 
         while (checkToken(Token.TokenType.PLUS) || checkToken(Token.TokenType.MINUS)) {
-            System.out.print(currToken.text() + " ");
+            output.append(currToken.text() + " ");
             emitter.emit(currToken.text());
             nextToken();
             term();
@@ -221,11 +228,11 @@ public class ParserImpl implements Parser {
 
     // term ::= unary {( "/" | "*" ) unary}
     private void term() throws LexerException, ParserException {
-        System.out.print("TERM ");
+        output.append("TERM ");
         unary();
 
         while (checkToken(Token.TokenType.SLASH) || checkToken(Token.TokenType.ASTERISK)) {
-            System.out.print(currToken.text() + " ");
+            output.append(currToken.text() + " ");
             emitter.emit(currToken.text());
             nextToken();
             unary();
@@ -234,10 +241,10 @@ public class ParserImpl implements Parser {
 
     // unary ::= ["+" | "-"] primary
     private void unary() throws LexerException, ParserException {
-        System.out.print("UNARY ");
+        output.append("UNARY ");
 
         if (checkToken(Token.TokenType.PLUS) || checkToken(Token.TokenType.MINUS)) {
-            System.out.print(currToken.text() + " ");
+            output.append(currToken.text() + " ");
             emitter.emit(currToken.text());
             nextToken();
         }
@@ -247,7 +254,7 @@ public class ParserImpl implements Parser {
 
     // primary ::= number | ident
     private void primary() throws LexerException, ParserException {
-        System.out.print("PRIMARY (" + currToken.text() + ") ");
+        output.append("PRIMARY (" + currToken.text() + ") ");
         emitter.emit(currToken.text());
 
         if (checkToken(Token.TokenType.NUMBER)) {
@@ -261,7 +268,7 @@ public class ParserImpl implements Parser {
 
     // nl ::= '\n'+
     private void newline() throws LexerException, ParserException {
-        System.out.println("NEWLINE");
+        output.append("NEWLINE\n");
         match(Token.TokenType.NEWLINE);
 
         while (checkToken(Token.TokenType.NEWLINE)) {
