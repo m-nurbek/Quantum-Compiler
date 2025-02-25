@@ -1,6 +1,5 @@
 D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\ApplicationUnitTest.java
 D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\EmitterUnitTest.java
 D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\LexerUnitTest.java
-D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\PythonParserUnitTest.java
-D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\testsuit\EmitterAndLexerTestSuite.java
-D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\testsuit\ParserTestSuite.java
+D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\testsuit\EmitterTestSuite.java
+D:\JavaProjects\Quantum-Compiler\src\test\java\com\nurbek\compiler\component\testsuit\LexerTestSuite.java

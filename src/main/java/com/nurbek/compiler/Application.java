@@ -20,13 +20,13 @@ public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public Application(Lexer lexer, Emitter emitter, Parser parser) {
+    private Application(Lexer lexer, Emitter emitter, Parser parser) {
         this.lexer = lexer;
         this.emitter = emitter;
         this.parser = parser;
     }
 
-    public void compile(String sourceFilePath, String outputFilePath) throws Exception {
+    private void compile(String sourceFilePath, String outputFilePath) throws Exception {
         File file = new File(sourceFilePath);
 
         if (!file.exists()) {

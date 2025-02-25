@@ -10,6 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -45,12 +47,24 @@ public class LexerUnitTest {
     }
 
     private static Stream<String> validSyntax() {
-        return Stream.of(
+        var stream = Stream.of(
                 " < ", " > ", " >= ", " <= ", " == ", " != ",
                 " = ", " + ", " - ", " / ", " * ", "Eq1",
                 " <df ", " >12", " >=var1 ", " <=df ", " ==23 ", " !=var2 ",
                 "25=34 ", " +2 ", "2-1 ", " 2/2 ", "2*2", "qw_1"
         );
+
+        List<Character> operators = List.of('+', '-', '/', '*');
+        List<Character> validEndings = getRandomCharactersFromList(getAllValidOperatorEndings(), 1000);
+
+        List<String> validTokens = new ArrayList<>();
+        for (Character operator : operators) {
+            for (Character ending : validEndings) {
+                validTokens.add(String.valueOf(operator) + ending);
+            }
+        }
+
+        return Stream.concat(stream, validTokens.stream());
     }
 
     @ParameterizedTest
@@ -67,16 +81,71 @@ public class LexerUnitTest {
     }
 
     private static Stream<String> invalidSyntax() {
-        return Stream.of("<<", ">>=", "=!", "1ewq", "+-", "-+", "===", "!!=", "!=");
+        var stream = Stream.of(
+                "<<", ">>=", "=!", "1ewq", "+-", "-+", "===", "!!=", "!=",
+                "+++", "---", "++", "--", "//", "/\\", "/*", "/_", "/-_", "*-", "*_", "_*",
+                "        +~", "   +)    ", "+@",
+                "+@", "+#", "+$", "+%", "+^", "+&", "+*", "+(", "+)", "+_", "+-", "+=", "+{", "+}", "+[", "+]",
+                "+|", "+\\", "+:", "+;", "+\"", "+'", "+<", "+>", "+,", "+.", "+?", "+/", "+~", "+!", "@"
+        );
+
+        List<Character> operators = List.of('+', '-', '/', '*');
+        List<Character> invalidEndings = getRandomCharactersFromList(getAllNonValidOperatorEndings(), 500);
+
+        List<String> invalidTokens = new ArrayList<>();
+        for (Character operator : operators) {
+            for (Character ending : invalidEndings) {
+                invalidTokens.add(String.valueOf(operator) + ending);
+            }
+        }
+
+        return Stream.concat(stream, invalidTokens.stream());
+    }
+
+    private static List<Character> getRandomCharactersFromList(List<Character> charList, int limit) {
+        Collections.shuffle(charList);
+        return charList.subList(0, Math.min(limit, charList.size()));
+    }
+
+    private static List<Character> getAllValidOperatorEndings() {
+        List<Character> nonAlphanumericChars = new ArrayList<>();
+        for (char c = 0; c < Character.MAX_VALUE; c++) {
+            if (Character.isDigit(c) || Character.isAlphabetic(c) || Character.isWhitespace(c)) {
+                nonAlphanumericChars.add(c);
+            }
+        }
+        return nonAlphanumericChars;
+    }
+
+    private static List<Character> getAllNonValidOperatorEndings() {
+        List<Character> nonAlphanumericChars = new ArrayList<>();
+        for (char c = 0; c < Character.MAX_VALUE; c++) {
+            if (!(Character.isDigit(c) || Character.isAlphabetic(c) || Character.isWhitespace(c))) {
+                nonAlphanumericChars.add(c);
+            }
+        }
+        return nonAlphanumericChars;
     }
 
     @ParameterizedTest
     @MethodSource("invalidSyntax")
     public void shouldFailOnInvalidToken(String source) {
-        assertThrows(LexerException.class, () -> {
+        Exception exception = assertThrows(LexerException.class, () -> {
             lexer.setSource(source);
             lexer.nextToken();
         });
+
+        assertThat(exception.getMessage()).contains("Invalid");
+    }
+
+    @Test
+    public void shouldThrowException() {
+        String message = "some message";
+        var exception = assertThrows(LexerException.class, () -> {
+            lexer.abort(message);
+        });
+
+        assertThat("ERROR: " + message).isEqualTo(exception.getMessage());
     }
 
     @Test
@@ -190,10 +259,17 @@ public class LexerUnitTest {
     }
 
     @Test
-    public void shouldThrowExceptionOnEmptySource() {
+    public void shouldSetSourceOnEmptyValue() {
         lexer.setSource("");
         Token token = lexer.nextToken();
         assertThat(token.type()).isEqualTo(EOF);
+    }
+
+    @Test
+    public void shouldSetSource() {
+        lexer.setSource("Hello");
+        Token token = lexer.nextToken();
+        assertThat(token.type()).isEqualTo(IDENTIFIER);
     }
 
     @Test

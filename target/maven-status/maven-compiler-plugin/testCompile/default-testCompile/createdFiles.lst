@@ -1,1 +1,5 @@
+com\nurbek\compiler\component\EmitterUnitTest.class
 com\nurbek\compiler\ApplicationUnitTest.class
+com\nurbek\compiler\component\testsuit\LexerTestSuite.class
+com\nurbek\compiler\component\LexerUnitTest.class
+com\nurbek\compiler\component\testsuit\EmitterTestSuite.class
